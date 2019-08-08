@@ -1,0 +1,95 @@
+import math
+def txt(t):####flip, rotate, rescale
+    import os
+    import json
+    import copy
+
+    folder = 'C:\\Users\\AAA\\Desktop\\resnet\\labelme-master\\examples\\semantic_segmentation\\data_annotated'
+
+    for root, dirs, fname in os.walk(folder):
+        for j in fname:
+            if 'txt' in j:
+                #print(j)
+                f = open(folder + "\\" + j, 'r')
+                l = f.readline()
+                #print(l)
+                f.close()
+                c,x, y, width, height = l.strip().split()
+                x = float(x)
+                y = float(y)
+
+                x = x - width/2
+                y = y - height/2
+                
+                width = float(width)
+                height = float(height)
+                if t == 0:
+                    x2 = x - 2*(x-0.5)
+                    if x2>0.5:
+                        x2 -= width
+                    f2= open(folder+"\\"+"lr_"+j, 'w')
+                    f2.write(c + ' ' + '%.2f'%(x2+width/2) +' '+'%.2f'%(y+height/2)+' '+'%.2f'%(width) + ' '+ '%.2f'%(height))
+                    f2.close()
+                    y2 = y - 2*(y-0.5)
+                    if y2>0.5:
+                        y2 -= width
+                    f2 = open(folder + "\\" + "ud_" + j, 'w')
+                    f2.write(c + ' ' + '%.2f'%(x+width/2) + ' ' + '%.2f'%(y2+height/2) + ' ' + '%.2f'%(width) + ' ' + '%.2f'%(height))
+                    f2.close()
+                elif t==1:
+                    ####90
+                    x2 = math.cos(math.pi / 2) * x - math.sin(math.pi / 2) * y + 1
+                    y2 = math.sin(math.pi / 2) * x + math.cos(math.pi / 2) * y
+                    x2 -= height
+
+                    tmp = width
+                    width = height
+                    height = tmp
+
+                    f2 = open(folder + "\\" + "90_" + j, 'w')
+                    f2.write(
+                        c + ' ' + '%.2f' % (x2+width/2) + ' ' + '%.2f' % (y2+width/2) + ' ' + '%.2f' % (width) + ' ' + '%.2f' % (height))
+                    f2.close()
+
+                    ####180
+                    x2 = math.cos(math.pi / 2) * x - math.sin(math.pi / 2) * y + 1
+                    y2 = math.sin(math.pi / 2) * x + math.cos(math.pi / 2) * y + 1
+                    x2 -= width
+                    y2 -= height
+
+                    tmp = width
+                    width = height
+                    height = tmp
+
+                    f2 = open(folder + "\\" + "180_" + j, 'w')
+                    f2.write(
+                        c + ' ' + '%.2f' % (x2+width/2) + ' ' + '%.2f' % (y2+height/2) + ' ' + '%.2f' % (width) + ' ' + '%.2f' % (height))
+                    f2.close()
+
+                    ####270
+                    x2 = math.cos(math.pi / 2) * x - math.sin(math.pi / 2) * y
+                    y2 = math.sin(math.pi / 2) * x + math.cos(math.pi / 2) * y + 1
+                    y2 -= width
+
+                    tmp = width
+                    width = height
+                    height = tmp
+
+                    f2 = open(folder + "\\" + "270_" + j, 'w')
+                    f2.write(
+                        c + ' ' + '%.2f' % (x2+width/2) + ' ' + '%.2f' % (y2+height/2) + ' ' + '%.2f' % (width) + ' ' + '%.2f' % (height))
+                    f2.close()
+
+                elif t==2:
+                    small = 0.5
+                    big = 1.3
+                    x2 = x+(1-small)*(0.5-x)
+                    y2 = y+(1-small)*(0.5-y)
+                    width = width*small
+                    height = height*small
+                    f2 = open(folder + "\\" + str(small) + j, 'w')
+                    f2.write(c + ' ' + '%.2f'%(x2+width/2) + ' ' + '%.2f'%(y2+height/2) + ' ' + '%.2f'%(width) + ' ' + '%.2f'%(height))
+
+txt(0)
+txt(1)
+txt(2)
